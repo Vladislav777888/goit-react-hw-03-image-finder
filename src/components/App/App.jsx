@@ -39,7 +39,11 @@ export class App extends Component {
         }
 
         this.setState({
-          posts: [...data.hits],
+          posts: [
+            ...data.hits.map(({ id, webformatURL, largeImageURL }) => {
+              return { id, webformatURL, largeImageURL };
+            }),
+          ],
           status: STATUS.success,
         });
 
@@ -50,7 +54,12 @@ export class App extends Component {
         const data = await getPosts({ page, q });
 
         this.setState({
-          posts: [...prevState.posts, ...data.hits],
+          posts: [
+            ...prevState.posts,
+            ...data.hits.map(({ id, webformatURL, largeImageURL }) => {
+              return { id, webformatURL, largeImageURL };
+            }),
+          ],
           status: STATUS.success,
         });
 
@@ -69,9 +78,9 @@ export class App extends Component {
     }
   }
 
-  handleSubmit = async searchValue => {
+  handleSubmit = searchValue => {
     this.setState(prevState => {
-      if (prevState.searchQuery === searchValue) {
+      if (prevState.search === searchValue) {
         return;
       }
       return { search: searchValue, page: 1, posts: [] };
