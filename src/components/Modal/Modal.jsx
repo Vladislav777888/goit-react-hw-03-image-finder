@@ -8,14 +8,7 @@ const modalRoot = document.querySelector('#modal-root');
 export class Modal extends Component {
   static propTypes = {
     onClose: PropTypes.func.isRequired,
-    modalId: PropTypes.number.isRequired,
-    posts: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        webformatURL: PropTypes.string.isRequired,
-        largeImageURL: PropTypes.string.isRequired,
-      }).isRequired
-    ).isRequired,
+    url: PropTypes.string.isRequired,
   };
 
   componentDidMount() {
@@ -38,18 +31,13 @@ export class Modal extends Component {
     }
   };
 
-  getModalImgSrc = () => {
-    const { posts, modalId } = this.props;
-
-    const post = posts.find(post => post.id === modalId);
-    return post.largeImageURL;
-  };
-
   render() {
+    const { url } = this.props;
+
     return createPortal(
       <Overlay onClick={this.handleBackdropClick}>
         <ModalContent>
-          <img src={this.getModalImgSrc()} alt="" />
+          <img src={url} alt="" />
         </ModalContent>
       </Overlay>,
       modalRoot

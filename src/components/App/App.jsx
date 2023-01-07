@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import axios from 'axios';
 
 import { STATUS } from '../../constants';
 import { getPosts, PER_PAGE as paginationLimit } from '../../services';
@@ -9,7 +8,6 @@ import { ImageGallery } from '../ImageGallery';
 import { Loader } from '../Loader';
 import { NotFound } from '../ImageGallery/NotFound';
 import { Button } from '../Button';
-import { Modal } from 'components/Modal';
 
 export class App extends Component {
   state = {
@@ -17,8 +15,6 @@ export class App extends Component {
     status: STATUS.idle,
     search: '',
     page: 1,
-    isModalOpen: false,
-    modalId: null,
   };
 
   async componentDidUpdate(_, prevState) {
@@ -91,30 +87,13 @@ export class App extends Component {
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
-  handleImageClick = id => {
-    this.setState(prevState => ({
-      isModalOpen: !prevState.isModalOpen,
-      modalId: id,
-    }));
-  };
-
   render() {
-    const { posts, status, isModalOpen, modalId } = this.state;
+    const { posts, status } = this.state;
 
     return (
       <Wrapper>
-        {isModalOpen && (
-          <Modal
-            onClose={this.handleImageClick}
-            posts={posts}
-            modalId={modalId}
-          />
-        )}
-
         <Searchbar onSubmit={this.handleSubmit} />
-        {posts.length > 0 && (
-          <ImageGallery posts={posts} onClick={this.handleImageClick} />
-        )}
+        {posts.length > 0 && <ImageGallery posts={posts} />}
 
         {posts.length === 0 && status === STATUS.error && <NotFound />}
 
